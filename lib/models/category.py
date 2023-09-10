@@ -14,10 +14,9 @@ class Category:
     @classmethod
     def create_table(cls):
         sql = """
-            CREATE TABLE IS NOT EXISTS categories (
+            CREATE TABLE IF NOT EXISTS categories (
             id INTEGER PRIMARY KEY,
-            name TEXT,
-            )
+            name TEXT)
         """
         CURSOR.execute(sql)
         CONN.commit()
@@ -45,6 +44,68 @@ class Category:
     @classmethod
     def create(cls, name):
         category = cls(name)
-        category.save
+        category.save()
         return category
 
+    def update(self):
+        sql = """
+            UPDATE categories
+            SET name = ?
+            WHERE id = ?
+            """
+        
+        CURSOR.execute(sql, (self.name, self.id))
+        CONN.commit()
+
+    def delete(self):
+        sql = """
+            DELETE FROM categories
+            WHERE id = ?
+            """
+        
+        CURSOR.execute(sql, (self.id,))
+        CONN.commit()
+
+        del type(self).all[self.id]
+        self.id = None
+
+    @classmethod
+    def instance_from_db(cls, row):
+        category = cls.all.get(row[0])
+        if category:
+            category.name = row[1]
+        else:
+            category = cls(row[1])
+            category.id = row[0]
+            cls.all[category.id] = category
+        return category
+    
+    @classmethod
+    def get_all(cls):
+        sql = """
+            SELECT *
+            FROM categories"""
+        
+        rows = CURSOR.execute(sql).fetchall()
+        return [cls.instance_from_db(row) for row in rows]
+    
+    @classmethod
+    def get_by_id(cls, name):
+        sql = """
+            SELECT * FROM cetegories
+            WHERE id = ?
+            """
+        
+        row = CURSOR.execute(sql, (name,)).fetchone()
+        return cls.instance_from_db(row) if row else None
+    
+    @classmethod
+    def find_by_name(cls, id):
+        sql = """
+            SELECT * FROM cetegories
+            WHERE name = ?"""
+        
+        row = CURSOR.execute(sql, (id,)).fetchone()
+        return cls.instance_from_db(row) if row else None
+    
+    
