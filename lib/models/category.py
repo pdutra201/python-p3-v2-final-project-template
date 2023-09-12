@@ -90,22 +90,32 @@ class Category:
         return [cls.instance_from_db(row) for row in rows]
     
     @classmethod
-    def get_by_id(cls, name):
+    def get_by_id(cls, id):
         sql = """
-            SELECT * FROM cetegories
+            SELECT * FROM categories
             WHERE id = ?
             """
-        
-        row = CURSOR.execute(sql, (name,)).fetchone()
-        return cls.instance_from_db(row) if row else None
-    
-    @classmethod
-    def find_by_name(cls, id):
-        sql = """
-            SELECT * FROM cetegories
-            WHERE name = ?"""
         
         row = CURSOR.execute(sql, (id,)).fetchone()
         return cls.instance_from_db(row) if row else None
     
+    @classmethod
+    def find_by_name(cls, name):
+        sql = """
+            SELECT * FROM categories
+            WHERE name = ?"""
+        
+        row = CURSOR.execute(sql, (name,)).fetchone()
+        return cls.instance_from_db(row) if row else None
     
+    def tasks(self):
+        
+        from models.task import Task
+        sql = """
+            SELECT * FROM tasks
+            WHERE category_id = ?
+        """
+        CURSOR.execute(sql, (self.id,))
+
+        rows = CURSOR.fetchall()
+        return [Task.instance_from_db(row) for row in rows]
