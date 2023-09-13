@@ -17,3 +17,13 @@ This Python command-line project allows you to manage categories and tasks using
 10. Updates a task due date
 
 ## Database Schema
+	•	Categories Table:
+	  •	Category_ID (Primary Key)
+  	•	name
+	•	Tasks Table:
+  	•	Task_ID (Primary Key)
+  	•	name
+	  •	Description
+  	•	Due_date
+	  •	Status (e.g., incomplete, complete)
+	  •	CategoryID (Foreign Key referencing Categories)
