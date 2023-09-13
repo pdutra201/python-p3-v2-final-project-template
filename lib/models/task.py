@@ -10,7 +10,7 @@ class Task():
         self.id = id
         self.name = name
         self.description = description
-        self.due_date = datetime.strptime(due_date, "%Y-%m-%d").date()
+        self.due_date = due_date
         self.status = False
         self.category_id = category_id
 
@@ -20,6 +20,44 @@ class Task():
         f"Due Date: {self.due_date}, " + \
         "status: " + ("incomplete, " if self.status == False else "Complete, ") + \
         f"Cetegory ID: {self.category_id})"
+    
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, name):
+        if isinstance(name, str) and len(name):
+            self._name = name
+        else:
+            raise ValueError(
+                "Name must be a non-empty string"
+            )
+    
+    @property
+    def description(self):
+        return self._description
+    
+    @description.setter
+    def description(self, description):
+        if isinstance(description, str) and len(description):
+            self._description = description
+        else:
+            raise ValueError(
+                "Name must be a non-empty string"
+            )
+    
+    @property
+    def due_date(self):
+        return self._due_date
+    
+    @due_date.setter
+    def due_date(self, due_date):
+        try: 
+            self._due_date = datetime.strptime(due_date, "%Y-%m-%d").date()
+        except ValueError:
+            print("Invalid date format. Please enter a date in YYYY-MM-DD format.")
+            
 
     @classmethod
     def create_table(cls):

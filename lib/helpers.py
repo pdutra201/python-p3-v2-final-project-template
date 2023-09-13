@@ -10,8 +10,11 @@ def addTask():
     desc = input("Enter a description: ")
     date = input("Enter a due date: ")
     catId = input("Enter a category id: ")
-    Task.create(name, desc, date, catId)
-    print("Task added")
+    try:
+        Task.create(name, desc, date, catId)
+        print("Task added")
+    except Exception as exc:
+        print("Error creating task", exc)
 
 def listTasks():
     tasks = Task.get_all()
@@ -25,8 +28,11 @@ def exit_program():
 
 def addCat():
     name = input("Enter category name: ")
-    Category.create(name)
-    print("Category added")
+    try:
+        Category.create(name)
+        print("Category added")
+    except Exception as exc:
+        print("Error creating category", exc)
 
 def listCat():
     cat = Category.get_all()
@@ -38,7 +44,7 @@ def completeTask():
     if task:
         task.status = True
         task.update()
-    e
+    
 
 def findByDate():
     date = input("Enter date YYYY-MM-DD: ")
@@ -73,12 +79,13 @@ def categoryTasks():
 
 def updateDate():
     name = input("Enter task name: ")
-    
     task = Task.find_by_name(name)
     if task:
         new_date = input("Enter new date: ")
         task.due_date = new_date
-        task.update()
-        print("Task updated")
+        try:
+            task.update()
+        except Exception as exc:
+            print("Error updating date", exc)
     else:
         print("Incorrect task name")
